@@ -64,7 +64,7 @@ async def read_users(
         select(User).offset(filter_users.offset).limit(filter_users.limit)
     )
 
-    return {'users': users}
+    return {'users': users.all()}
 
 
 @router.put('/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
