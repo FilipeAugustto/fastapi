@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 import pytest
-from sqlalchemy import select
+from sqlalchemy.exc import DataError
 
 from fast_zero.models import Todo, TodoState, User
 from tests.conftest import TodoFactory
@@ -40,10 +40,9 @@ async def test_create_todo_error(session, user: User):
     )
 
     session.add(todo)
-    await session.commit()
 
-    with pytest.raises(LookupError):
-        await session.scalar(select(Todo))
+    with pytest.raises(DataError):
+        await session.commit()
 
 
 @pytest.mark.asyncio
@@ -146,14 +145,16 @@ async def test_list_todos_filter_should_return_all_expected_fields(
     )
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json()['todos'] == [{
-        'id': todo.id,
-        'title': todo.title,
-        'description': todo.description,
-        'state': todo.state,
-        'created_at': time.isoformat(),
-        'updated_at': time.isoformat(),
-    }]
+    assert response.json()['todos'] == [
+        {
+            'id': todo.id,
+            'title': todo.title,
+            'description': todo.description,
+            'state': todo.state,
+            'created_at': time.isoformat(),
+            'updated_at': time.isoformat(),
+        }
+    ]
 
 
 @pytest.mark.asyncio
