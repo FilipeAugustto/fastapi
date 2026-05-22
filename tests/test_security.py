@@ -2,12 +2,12 @@ from http import HTTPStatus
 
 from jwt import decode
 
-from fast_zero.security import create_acess_token
+from fast_zero.security import create_access_token
 
 
 def test_jwt(settings):
     data = {'test': 'test'}
-    token = create_acess_token(data)
+    token = create_access_token(data)
 
     decoded = decode(token, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
 
@@ -26,7 +26,7 @@ def test_invalid_token(client):
 
 def test_get_current_user_not_found(client):
     data = {'no-email': 'test'}
-    token = create_acess_token(data)
+    token = create_access_token(data)
 
     response = client.delete(
         '/users/1', headers={'Authorization': f'Bearer {token}'}
@@ -38,7 +38,7 @@ def test_get_current_user_not_found(client):
 
 def test_get_current_user_does_not_exists(client):
     data = {'sub': 'test@test.com'}
-    token = create_acess_token(data)
+    token = create_access_token(data)
 
     response = client.delete(
         '/users/1', headers={'Authorization': f'Bearer {token}'}
