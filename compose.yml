@@ -4,9 +4,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/
     environment:
-      POSTGRES_USER: f_user
-      POSTGRES_DB: f_db
-      POSTGRES_PASSWORD: f_190424
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
 
@@ -19,7 +19,7 @@ services:
     depends_on:
       - fastzero_database
     environment:
-      DATABASE_URL: postgresql+psycopg://f_user:f_190424@fastzero_database:5432/f_db
+      DATABASE_URL: postgresql+psycopg://${DB_USER}:${DB_PASSWORD}@fastzero_database:5432/${POSTGRES_DB}
 
 volumes:
   pgdata:
